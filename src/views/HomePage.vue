@@ -23,7 +23,7 @@
       </div>
     </div>
     <div class="select-wrap" v-for="(item, index) in roomList" :key="index">
-      <div class="select-item" @click="selectRoom(index)">
+      <div class="select-item" @click="selectRoom(item.id)">
         <img :src="item.imageUrl" alt="No Image!" />
         <div>
           <p class="room-type">{{ item.name }}</p>
@@ -55,7 +55,7 @@ export default {
   },
   async created() {
     let response = await this.axios
-      .get('')
+      .get('/rooms')
       .then(function(response) {
         console.log(response)
         return response

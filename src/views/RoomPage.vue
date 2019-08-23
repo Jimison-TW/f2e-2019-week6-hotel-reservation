@@ -1,40 +1,41 @@
 <template>
   <div class="content">
-    <img id="bg" src="" alt="lost picture" />
+    <!-- <img id="bg" :src="roomDatas[0].imageUrl[0]" alt="lost picture" /> -->
     <icon id="logo-block" width="150" height="43" iconName="logo-block" />
-    <div id="down-area">
-      <div id="left-side">
-        <h1>Single Room</h1>
-        <ul>
-          <li>房客人數限制： 1~1 人</li>
-          <li>床型：單人床</li>
-          <li>衛浴數量： 1 間</li>
-          <li>房間大小： 18 平方公尺</li>
-        </ul>
-        <p id="en-info">
-          Single Room is only reserved for one guest. There is a bedroom with a single size bed and a private bathroom. Everything you need prepared for you:
-          sheets and blankets, towels, soap and shampoo, hairdryer are provided. In the room there is AC and of course WiFi.
-        </p>
-        <div id="time-block">
-          <div>
-            <h3>Check In</h3>
-            <span>15:00 — 21:00</span>
+    <div v-for="item in roomDatas" :key="item.id">
+      <div id="down-area">
+        <div id="left-side">
+          <h1>{{item.name}}</h1>
+          <ul>
+            <li>房客人數限制： {{ item.descriptionShort.GuestMax +' ~ '+ item.descriptionShort.GuestMin }} 人</li>
+            <li>床型：{{ (item.descriptionShort.Bed[0] === 'Single') ? '單人床' : '雙人床' }}</li>
+            <li>衛浴數量： {{ item.descriptionShort['Private-Bath'] }} 間</li>
+            <li>房間大小： {{ item.descriptionShort.Footage }} 平方公尺</li>
+          </ul>
+          <p id="en-info">
+            {{ item.description }}
+          </p>
+          <div id="time-block">
+            <div>
+              <h3>Check In</h3>
+              <span>{{ item.checkInAndOut.checkInEarly + '—' + item.checkInAndOut.checkInLate }}</span>
+            </div>
+            <div>
+              <h3>Check Out</h3>
+              <span>{{item.checkInAndOut.checkOut}}</span>
+            </div>
           </div>
-          <div>
-            <h3>Check Out</h3>
-            <span>10:00</span>
-          </div>
+          <icon-info-area />
         </div>
-        <icon-info-area />
-      </div>
-      <div id="middle-side">
-        <p>NT.1380</p>
-        <p>平日(一~四)</p>
-        <p>NT.1500</p>
-        <p>假日(五~日)</p>
-      </div>
-      <div id="right-side">
-        <button>預約時段</button>
+        <div id="middle-side">
+          <p>NT.{{item.normalDayPrice}}</p>
+          <p>平日(一~四)</p>
+          <p>NT.{{item.holidayPrice}}</p>
+          <p>假日(五~日)</p>
+        </div>
+        <div id="right-side">
+          <button>預約時段</button>
+        </div>
       </div>
     </div>
   </div>
@@ -50,10 +51,20 @@ export default {
     IconInfoArea
   },
   data: () => ({
-    // roomId: this.$route.params.roomId
+    roomDatas: []
   }),
-  created() {
-    console.log(this.$route.params.roomId)
+  async created() {
+    let id = this.$route.params.roomId
+    let response = await this.axios
+      .get(`/room/${id}`)
+      .then(result => {
+        return result
+      })
+      .catch(error => {
+        console.log(error)
+      })
+    this.roomDatas = response.data.room
+    console.log(this.roomDatas)
   }
 }
 </script>
