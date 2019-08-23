@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <img id="bg" src="@/assets/room-picture/home-page.jpg" alt="lost picture" />
+    <img id="bg" src="" alt="lost picture" />
     <icon id="logo-block" width="150" height="43" iconName="logo-block" />
     <div id="down-area">
       <div id="left-side">
@@ -48,6 +48,12 @@ export default {
   components: {
     Icon,
     IconInfoArea
+  },
+  data: () => ({
+    // roomId: this.$route.params.roomId
+  }),
+  created() {
+    console.log(this.$route.params.roomId)
   }
 }
 </script>
