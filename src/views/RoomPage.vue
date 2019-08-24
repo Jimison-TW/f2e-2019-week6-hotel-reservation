@@ -1,14 +1,14 @@
 <template>
   <div class="content">
-    <!-- <img id="bg" :src="roomDatas[0].imageUrl[0]" alt="lost picture" /> -->
+    <img id="bg" :src="roomDatas[0].imageUrl[0]" alt="lost picture" />
     <icon id="logo-block" width="150" height="43" iconName="logo-block" />
     <div v-for="item in roomDatas" :key="item.id">
       <div id="down-area">
         <div id="left-side">
-          <h1>{{item.name}}</h1>
+          <h1>{{ item.name }}</h1>
           <ul>
-            <li>房客人數限制： {{ item.descriptionShort.GuestMax +' ~ '+ item.descriptionShort.GuestMin }} 人</li>
-            <li>床型：{{ (item.descriptionShort.Bed[0] === 'Single') ? '單人床' : '雙人床' }}</li>
+            <li>房客人數限制： {{ item.descriptionShort['GuestMax'] + ' ~ ' + item.descriptionShort['GuestMin'] }} 人</li>
+            <li>床型：{{ item.descriptionShort.Bed[0] === 'Single' ? '單人床' : '雙人床' }}</li>
             <li>衛浴數量： {{ item.descriptionShort['Private-Bath'] }} 間</li>
             <li>房間大小： {{ item.descriptionShort.Footage }} 平方公尺</li>
           </ul>
@@ -22,15 +22,15 @@
             </div>
             <div>
               <h3>Check Out</h3>
-              <span>{{item.checkInAndOut.checkOut}}</span>
+              <span>{{ item.checkInAndOut.checkOut }}</span>
             </div>
           </div>
           <icon-info-area />
         </div>
         <div id="middle-side">
-          <p>NT.{{item.normalDayPrice}}</p>
+          <p>NT.{{ item.normalDayPrice }}</p>
           <p>平日(一~四)</p>
-          <p>NT.{{item.holidayPrice}}</p>
+          <p>NT.{{ item.holidayPrice }}</p>
           <p>假日(五~日)</p>
         </div>
         <div id="right-side">
@@ -51,10 +51,46 @@ export default {
     IconInfoArea
   },
   data: () => ({
-    roomDatas: []
+    roomDatas: [
+      {
+        amenities: {
+          'Air-Conditioner': true,
+          Breakfast: true,
+          'Child-Friendly': false,
+          'Great-View': false,
+          'Mini-Bar': false,
+          'Pet-Friendly': true,
+          Refrigerator: true,
+          'Room-Service': false,
+          'Smoke-Free': true,
+          Sofa: false,
+          Television: true,
+          'Wi-Fi': true
+        },
+        checkInAndOut: {
+          checkInEarly: '',
+          checkInLate: '',
+          checkOut: ''
+        },
+        description: '',
+        descriptionShort: {
+          Bed: [],
+          Footage: 18,
+          GuestMax: 1,
+          GuestMin: 1,
+          'Private-Bath': 1
+        },
+        holidayPrice: 0,
+        id: '',
+        imageUrl: [],
+        name: '',
+        normalDayPrice: 0
+      }
+    ]
   }),
   async created() {
-    let id = this.$route.params.roomId
+    let id = this.$store.state.selectId
+    console.log(id)
     let response = await this.axios
       .get(`/room/${id}`)
       .then(result => {
@@ -64,7 +100,6 @@ export default {
         console.log(error)
       })
     this.roomDatas = response.data.room
-    console.log(this.roomDatas)
   }
 }
 </script>

@@ -50,6 +50,7 @@ export default {
   methods: {
     selectRoom(roomId) {
       console.log(roomId)
+      this.$store.commit('selectRoom', roomId)
       this.$router.push({ name: 'room-reservation', params: { roomId: roomId } })
     }
   },
