@@ -37,6 +37,8 @@
           <button>預約時段</button>
         </div>
       </div>
+
+      <v-calendar class="calendar" mode="range" :value="null" color="red" is-dark is-inline v-model="selectedDate" />
     </div>
   </div>
 </template>
@@ -86,7 +88,11 @@ export default {
         name: '',
         normalDayPrice: 0
       }
-    ]
+    ],
+    selectedDate: {
+      start: new Date(2018, 10, 9),
+      end: new Date(2018, 10, 10)
+    }
   }),
   async created() {
     let id = this.$store.state.selectId
@@ -148,5 +154,9 @@ h1 {
 }
 #time-block div {
   display: inline;
+}
+.calendar {
+  width: 100%;
+  height: 300px;
 }
 </style>
