@@ -34,11 +34,12 @@
           <p>假日(五~日)</p>
         </div>
         <div id="right-side">
+          <!-- <v-date-picker :value='today' mode="single" color="red" is-dark is-inline @dayclick="singleDayClicked" /> -->
+          <v-date-picker v-model="rangeDate" mode="range" color="red" is-dark is-inline @dayclick="rangeDayClicked" />
+          <!-- <v-calendar :attributes="attrs"> </v-calendar> -->
           <button>預約時段</button>
         </div>
       </div>
-
-      <v-calendar class="calendar" mode="range" :value="null" color="red" is-dark is-inline v-model="selectedDate" />
     </div>
   </div>
 </template>
@@ -89,11 +90,41 @@ export default {
         normalDayPrice: 0
       }
     ],
-    selectedDate: {
-      start: new Date(2018, 10, 9),
-      end: new Date(2018, 10, 10)
-    }
+    isOnRangeDaySelect: false,
+    today: new Date(),
+    rangeDate: {
+      start: new Date(2019, 7, 9),
+      end: new Date(2019, 7, 10)
+    },
+    attrs: [
+      {
+        key: 'today',
+        highlight: {
+          backgroundColor: '#ff8080'
+          // Other properties are available too, like `height` & `borderRadius`
+        },
+        dates: new Date()
+      }
+    ]
   }),
+  methods: {
+    singleDayClicked(selectDate) {
+      let day = selectDate.day
+      let month = selectDate.month
+      let year = selectDate.year
+      this.today = new Date(year, month - 1, day)
+    },
+    rangeDayClicked(selectDates){
+      let day = selectDates.day
+      let month = selectDates.month
+      let year = selectDates.year
+      if(!this.isOnRangeDaySelect){
+        this.rangeDate.start = new Date(year, month - 1, day)
+      }else{
+        this.rangeDate.end = new Date(year, month - 1, day)
+      }
+    }
+  },
   async created() {
     let id = this.$store.state.selectId
     console.log(id)
@@ -154,9 +185,5 @@ h1 {
 }
 #time-block div {
   display: inline;
-}
-.calendar {
-  width: 100%;
-  height: 300px;
 }
 </style>
