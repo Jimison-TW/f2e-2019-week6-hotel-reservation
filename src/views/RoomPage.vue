@@ -37,23 +37,27 @@
           <!-- <v-date-picker :value='today' mode="single" color="red" is-dark is-inline @dayclick="singleDayClicked" /> -->
           <v-date-picker v-model="rangeDate" mode="range" color="red" is-dark is-inline @dayclick="rangeDayClicked" />
           <!-- <v-calendar :attributes="attrs"> </v-calendar> -->
-          <button>預約時段</button>
+          <button @click="openReserveModal">預約時段</button>
         </div>
       </div>
     </div>
+    <ReserveModal v-show="show"/>
   </div>
 </template>
 
 <script>
 import Icon from '../component/Icon.vue'
 import IconInfoArea from '../component/IconInfoArea.vue'
+import ReserveModal from '../component/ReserveModal.vue'
 
 export default {
   components: {
     Icon,
-    IconInfoArea
+    IconInfoArea,
+    ReserveModal
   },
   data: () => ({
+    show: false,
     roomDatas: [
       {
         amenities: {
@@ -93,8 +97,8 @@ export default {
     isOnRangeDaySelect: false,
     today: new Date(),
     rangeDate: {
-      start: new Date(2019, 7, 9),
-      end: new Date(2019, 7, 10)
+      start: new Date(),
+      end: new Date()
     },
     attrs: [
       {
@@ -114,15 +118,18 @@ export default {
       let year = selectDate.year
       this.today = new Date(year, month - 1, day)
     },
-    rangeDayClicked(selectDates){
+    rangeDayClicked(selectDates) {
       let day = selectDates.day
       let month = selectDates.month
       let year = selectDates.year
-      if(!this.isOnRangeDaySelect){
+      if (!this.isOnRangeDaySelect) {
         this.rangeDate.start = new Date(year, month - 1, day)
-      }else{
+      } else {
         this.rangeDate.end = new Date(year, month - 1, day)
       }
+    },
+    openReserveModal(){
+      this.show = true;
     }
   },
   async created() {
@@ -141,9 +148,6 @@ export default {
 </script>
 
 <style scoped>
-.content {
-  /* background-color: #aaa; */
-}
 #bg {
   top: 0;
   width: 100%;
