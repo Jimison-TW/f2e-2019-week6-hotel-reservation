@@ -58,7 +58,6 @@ export default {
     let response = await this.axios
       .get('/rooms')
       .then(function(response) {
-        console.log(response)
         return response
       })
       .catch(error => {

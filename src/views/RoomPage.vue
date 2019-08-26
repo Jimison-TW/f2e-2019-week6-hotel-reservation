@@ -127,7 +127,6 @@ export default {
   },
   async created() {
     let id = this.$store.state.selectId
-    console.log(id)
     let response = await this.axios
       .get(`/room/${id}`)
       .then(result => {
